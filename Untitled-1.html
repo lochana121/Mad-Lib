@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mad Libs Form</title>
+</head>
+<body>
+  <form id="madLibForm" action="/cs212/lab7" method="post">
+    <label for="noun">Noun:</label>
+    <input type="text" id="noun" name="noun"><br>
+    
+    <label for="adjective">Adjective:</label>
+    <input type="text" id="adjective" name="adjective"><br>
+    
+    <label for="verb">Verb:</label>
+    <input type="text" id="verb" name="verb"><br>
+    
+    <label for="place">Place:</label>
+    <input type="text" id="place" name="place"><br>
+    
+    <label for="person">Person:</label>
+    <input type="text" id="person" name="person"><br>
+    
+    <input type="submit" value="Create Mad Lib">
+  </form>
+
+  <div id="madLibOutput"></div>
+
+  <script>
+    const form = document.getElementById('madLibForm');
+    const madLibOutput = document.getElementById('madLibOutput');
+
+    form.addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const noun = document.getElementById('noun').value;
+      const adjective = document.getElementById('adjective').value;
+      const verb = document.getElementById('verb').value;
+      const place = document.getElementById('place').value;
+      const person = document.getElementById('person').value;
+
+      const formData = {
+        noun,
+        adjective,
+        verb,
+        place,
+        person
+      };
+
+      try {
+        const response = await fetch('/cs212/lab7', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok.');
+        }
+
+        const madLib = await response.text();
+        // Display the filled Mad Lib
+        madLibOutput.textContent = madLib;
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+      }
+    });
+  </script>
+</body>
+</html>
